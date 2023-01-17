@@ -1,0 +1,17 @@
+App\Entity\Vehicle:
+    attributes:
+        normalization_context:
+            groups: [vehicle_read]
+        filters:
+            - ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter
+    itemOperations:
+        get:
+            method: GET
+            controller: App\Api\Action\GetVehicleEnvLabel
+            openapi_context:
+                summary: Gets the environmental label of a given vehicle's license plate.
+    properties:
+        label:
+            subresource:
+                resourceClass: App\Entity\Label
+                collection: false

@@ -1,0 +1,29 @@
+framework:
+    messenger:
+        serializer:
+            default_serializer: messenger.transport.symfony_serializer
+            symfony_serializer:
+                format: json
+                context: { }
+        failure_transport: failed
+        transports:
+            amqp_csv:
+                dsn: '%env(string:MESSENGER_TRANSPORT_DSN)%'
+                serializer: Settler\Serializer\Messenger\EventSerializer
+                retry_strategy:
+                    max_retries: 1
+                    delay: 1000
+                    multiplier: 2
+                options:
+                    vhost: '%env(string:MESSENGER_VHOST)%'
+                    exchange:
+                        name: '%env(string:MESSENGER_EXCHANGE)%'
+                        type: direct
+                    queues:
+                        csv_queue:
+                            binding_keys: [csv_queue]
+                    auto_setup: true
+            failed:
+                dsn: 'doctrine://failed_messages?queue_name=failed'
+        routing:
+            'Settler\Messenger\Message\EnvLabelCsvMessage': amqp_csv

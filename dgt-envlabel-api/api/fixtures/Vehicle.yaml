@@ -1,0 +1,4 @@
+App\Entity\Vehicle:
+    vehicle_{1..10}:
+        id: <id()>
+        label: '@label*'

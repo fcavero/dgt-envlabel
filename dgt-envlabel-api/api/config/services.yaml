@@ -1,0 +1,49 @@
+parameters:
+    app.tmp_storage_dir: '%env(string:TMP_STORAGE_DIR)%'
+    app.dgt_environmental_labels_url: '%env(string:DGT_ENVIRONMENTAL_LABELS_URL)%'
+    app.dgt_environmental_labels_zip_file: '%env(string:DGT_ENVIRONMENTAL_LABELS_ZIP_FILE)%'
+    app.dgt_environmental_labels_csv_file: '%env(string:DGT_ENVIRONMENTAL_LABELS_CSV_FILE)%'
+    app.split_command_lines_arg: '%env(int:SPLIT_COMMAND_LINES_ARG)%'
+    app.split_command_storage_dir: '%env(string:SPLIT_COMMAND_STORAGE_DIR)%'
+
+services:
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+
+    App\Api\Action\:
+        resource: '../src/Api/Action'
+        tags: ['controller.service_arguments']
+
+    App\Api\Listener\JsonExceptionResponseTransformerListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: 100 }
+
+    App\Service\DownloadDgtEnvLabelsFileService:
+        arguments:
+            $zipStorageDir: '%app.tmp_storage_dir%'
+            $zipFilename: '%app.dgt_environmental_labels_zip_file%'
+            $dgtEnvLabelsUrl: '%app.dgt_environmental_labels_url%'
+
+    App\Service\EnvLabelsFileUnzipperService:
+        arguments:
+            $zipStorageDir: '%app.tmp_storage_dir%'
+            $zipFilename: '%app.dgt_environmental_labels_zip_file%'
+
+    App\Service\EnvLabelsFileCutterService:
+        arguments:
+            $zipStorageDir: '%app.tmp_storage_dir%'
+            $lines: '%app.split_command_lines_arg%'
+            $csvStorageDir: '%app.split_command_storage_dir%'
+            $csvFilename: '%app.dgt_environmental_labels_csv_file%'
+
+    App\Service\SendEnvLabelCsvMessagesService:
+        arguments:
+            $csvStorageDir: '%app.split_command_storage_dir%'

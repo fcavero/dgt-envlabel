@@ -1,0 +1,5 @@
+# Example enabled_plugins
+[rabbitmq_federation_management,rabbitmq_shovel,rabbitmq_shovel_management,rabbitmq_management,rabbitmq_mqtt,rabbitmq_stomp].
+
+# Check all available plugins in the image with:
+# rabbitmq-plugins list

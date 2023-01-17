@@ -1,0 +1,5 @@
+xdebug.mode=debug,coverage
+xdebug.start_with_request=yes
+xdebug.log_level=${XDEBUG_LOG_LEVEL}
+xdebug.client_host=${XDEBUG_CLIENT_HOST}
+xdebug.client_port=${XDEBUG_CLIENT_PORT}

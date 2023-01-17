@@ -1,0 +1,16 @@
+FROM nginx:1.19
+
+ARG UID
+EXPOSE $UID
+
+RUN echo "Europe/Madrid" > /etc/timezone \
+    && ln -s -f /usr/share/zoneinfo/CET /etc/localtime
+
+RUN adduser -u ${UID} --disabled-password --gecos "" appuser
+
+COPY default.conf /etc/nginx/conf.d/
+COPY default-ssl.conf /etc/nginx/conf.d/
+COPY dev.crt /etc/nginx/dev.crt
+COPY dev.key /etc/nginx/dev.key
+COPY options-ssl-nginx.conf /etc/nginx/options-ssl-nginx.conf
+COPY ssl-dhparams.pem /etc/nginx/ssl-dhparams.pem

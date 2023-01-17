@@ -1,0 +1,60 @@
+#!/bin/bash
+
+CONFIG = .env
+include ${CONFIG}
+
+UID = $(shell id -u)
+
+help: ## Show this help message
+	@echo 'usage: make [target]'
+	@echo
+	@echo 'targets:'
+	@egrep '^(.+)\:\ ##\ (.+)' ${MAKEFILE_LIST} | column -t -c 2 -s ':#'
+
+build: ## (Re)Builds all the containers
+	U_ID=${UID} docker-compose build
+
+run: ## Starts the containers
+#	docker network create envlabel-api-network || true
+	U_ID=${UID} docker-compose up -d
+
+stop: ## Stops the containers
+	U_ID=${UID} docker-compose stop
+
+terminate: ## Stops the containers (with --remove-orphans option set)
+	U_ID=${UID} docker-compose down --remove-orphans -v
+
+restart: ## Restarts the containers
+	$(MAKE) stop && $(MAKE) run
+
+#--> Backend commands
+code-style: ## Runs php-cs to fix code styling following Symfony rules
+	U_ID=${UID} docker exec -it -u ${UID} $(DOCKER_PHP) php-cs-fixer fix src --rules=@Symfony
+	U_ID=${UID} docker exec -it -u ${UID} $(DOCKER_PHP) php-cs-fixer fix tests --rules=@Symfony
+
+ssh-php: ## SSHs into the PHP container as unprivileged user
+	U_ID=${UID} docker exec -it -u ${UID} $(DOCKER_PHP) bash
+
+ssh-web: ## SSHs into the web server container as unprivileged user
+	U_ID=${UID} docker exec -it -u ${UID} $(DOCKER_WEB) bash
+
+ssh-php-root: ## SSHs into the PHP container as root
+	U_ID=${UID} docker exec -it -u root $(DOCKER_PHP) bash
+
+ssh-web-root: ## SSHs into the web server container as root
+	U_ID=${UID} docker exec -it -u root $(DOCKER_WEB) bash
+
+api-logs-dev: ## Tails the Symfony dev log
+	U_ID=${UID} docker exec -it -u ${UID} $(DOCKER_PHP) tail -f api/var/log/dev.log
+
+api-logs-prod: ## Tails the Symfony prod log
+	U_ID=${UID} docker exec -it -u ${UID} $(DOCKER_PHP) tail -f api/var/log/prod.log
+#<-- End backend commands
+
+#--> Docker specific commands
+docker-log-php: ## Tails the PHP container log
+	docker logs --follow $(DOCKER_PHP)
+
+docker-log-web: ## Tails the WEB container log
+	docker logs --follow $(DOCKER_WEB)
+#<-- Docker specific commands

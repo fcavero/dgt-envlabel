@@ -1,0 +1,8 @@
+App\Entity\Vehicle:
+    attributes:
+        id:
+            groups: [vehicle_read]
+        createdAt:
+            groups: [vehicle_read]
+        label:
+            groups: [vehicle_read]

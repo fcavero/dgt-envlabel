@@ -1,0 +1,8 @@
+###> Docker stuff ###
+.env
+Makefile
+###< Docker stuff ###
+
+###> RabbitMQ stuff ###
+enabled_plugins
+###< RabbitMQ stuff ###

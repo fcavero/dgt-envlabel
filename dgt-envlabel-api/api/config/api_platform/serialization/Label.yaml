@@ -1,0 +1,8 @@
+App\Entity\Label:
+    attributes:
+        id:
+            groups: [label_read, vehicle_read]
+        tag:
+            groups: [label_read, vehicle_read]
+        description:
+            groups: [label_read, vehicle_read]

@@ -1,0 +1,13 @@
+###> IDE stuff ###
+.idea
+.vscode
+###< IDE stuff ###
+
+###> Dist stuff ###
+.env
+*.ini
+*.conf
+docker-compose.yml
+Dockerfile
+Makefile
+###< Dist stuff ###

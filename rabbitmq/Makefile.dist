@@ -1,0 +1,37 @@
+#!/bin/bash
+
+CONFIG = .env
+include ${CONFIG}
+
+help: ## Show this help message
+	@echo 'usage: make [target]'
+	@echo
+	@echo 'targets:'
+	@egrep '^(.+)\:\ ##\ (.+)' ${MAKEFILE_LIST} | column -t -c 2 -s ':#'
+
+run: ## Start the RabbitMQ container
+	docker rm $(RABBIT_NAME) || true
+	docker run -d \
+		--hostname $(RABBIT_NAME) \
+		--name $(RABBIT_NAME) \
+		-p $(RABBIT_PORT):5672 \
+		-p $(RABBIT_MGMT_PORT):15672 \
+		-v `pwd`/$(RABBIT_NAME)-mnesia:/var/lib/rabbitmq/mnesia/rabbit@$(RABBIT_NAME) \
+		--mount type=bind,source=`pwd`/enabled_plugins,target=/etc/rabbitmq/enabled_plugins \
+		--restart=on-failure \
+		rabbitmq:3-management
+
+stop: ## Stop the RabbitMQ container
+	docker stop $(RABBIT_NAME)
+
+restart: ## Restart the RabbitMQ container
+	docker restart $(RABBIT_NAME)
+
+ssh-rabbit: ## SSH into the RabbitMQ container
+	docker exec -it $(RABBIT_NAME) bash
+
+ssh-rabbit-root: ## SSH into the RabbitMQ container as root
+	docker exec -it -u root $(RABBIT_NAME) bash
+
+logs-rabbit: ## Show logs of the RabbitMQ container (with --follow option set)
+	docker logs --follow $(RABBIT_NAME)

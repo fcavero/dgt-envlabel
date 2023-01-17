@@ -1,0 +1,18 @@
+parameters:
+    app.es_license_plate_regexp: '%env(string:ES_LICENSE_PLATE_REGEXP)%'
+
+services:
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    Settler\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+
+    Settler\Service\CsvFileBulkInsertService:
+        arguments:
+            $esPlateRegexp: '%app.es_license_plate_regexp%'

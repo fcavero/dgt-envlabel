@@ -1,0 +1,3 @@
+###> Sqitch config stuff ###
+*.conf
+###< Sqitch config stuff ###

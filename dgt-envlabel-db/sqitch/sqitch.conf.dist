@@ -1,0 +1,24 @@
+[user]
+      name = "user.name"
+      email = "user.email"
+
+[rebase]
+    verify = true
+
+[deploy]
+    verify = true
+
+[core]
+	engine = pg
+	plan_file = sqitch.plan
+	top_dir = .
+
+[engine "pg"]
+	# registry = sqitch
+
+#[target "dev"]
+#    uri = db:pg://usr:pwd@localhost/db
+#[target "pre"]
+#    uri = db:pg://usr:pwd@pre/db
+#[target "pro"]
+#    uri = db:pg://usr:pwd@pro/db
