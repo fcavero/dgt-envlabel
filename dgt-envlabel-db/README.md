@@ -1,11 +1,6 @@
-# dgt-envlabel-db
+# Modelo de datos de la API de distintivos ambientales de la DGT.
 
-Modelo de datos de la API `dgt-envlabel-api`
-
-El modelo de datos es muy simple:
+El modelo de datos de esta API es absurdamente simple:
 
 * **tt_envlabel** → Tabla maestra de tipos distintivos ambientales (se incluyen *data-fixtures*).
 * **t_vehicle** → Tabla de matrículas de vehículos con su distintivo correspondiente, según la DGT.
-* **tmp_file** → Tabla auxiliar para cargar el pedazo de fichero CSV de la DGT.
-
-![envlabel-schema](./doc/dgt-envlabel-db.png?raw=true "envlabel-schema")

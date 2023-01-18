@@ -3,6 +3,7 @@
 BEGIN;
 
 SELECT id
+     , txt_plate
      , tms_creation
      , envlabel_id
      FROM "envlabel".t_vehicle

@@ -13,17 +13,21 @@ class CsvFileBulkInsertService
 {
     private string $esPlateRegexp;
 
+    private string $insertStatement;
+
     private EntityManagerInterface $entityManager;
 
     private LoggerInterface $logger;
 
 
     public function __construct(
+        string $insertStatement,
         string $esPlateRegexp,
         EntityManagerInterface $entityManager,
         LoggerInterface $logger
     )
     {
+        $this->insertStatement = $insertStatement;
         $this->esPlateRegexp = $esPlateRegexp;
         $this->entityManager = $entityManager;
         $this->logger = $logger;
@@ -41,10 +45,7 @@ class CsvFileBulkInsertService
             // Need to check if line starts with a valid spanish license plate
             if ($this->checkValidESPlate($items[0])) {
                 $this->entityManager->getConnection()
-                    ->insert('envlabel.tmp_file', [
-                        'txt_plate'   => $items[0],
-                        'txt_dgt_tag' => $items[1],
-                    ]);
+                    ->executeQuery($this->insertStatement, ['plate' => $items[0],'tag' => $items[1],]);
             }
         }
     }
