@@ -24,7 +24,7 @@ class DownloadDgtEnvLabelsFileCommand extends Command
     protected function configure() : void
     {
         $this
-            ->setName('app:download-environmental-label-file')
+            ->setName('app:download-environmental-labels-file')
             ->setHelp("Gets the official file of vehicle\'s environmental labels.")
             ->setDescription('Downloads a compressed file from DGT (Dirección General de Tráfico) '.
                 'servers containing the environmental labels of the whole vehicle fleet in Spain.');

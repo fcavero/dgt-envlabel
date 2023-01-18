@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Uid\Uuid;
 
 /**
  * @ORM\Table(name="envlabel.t_vehicle")
@@ -13,10 +14,15 @@ class Vehicle
 {
     /**
      * @ORM\Id()
-     * @ORM\Column(type="string", name="id")
+     * @ORM\Column(type="guid", name="id")
      * @ORM\GeneratedValue(strategy="NONE")
      */
     private string $id;
+
+    /**
+     * @ORM\Column(type="string", name="txt_plate")
+     */
+    private string $plate;
 
     /**
      * @ORM\Column(type="datetime", name="tms_creation")
@@ -29,13 +35,11 @@ class Vehicle
      */
     private Label $label;
 
-    /**
-     * @param string $id
-     * @param Label $label
-     */
-    public function __construct(string $id, Label $label)
+
+    public function __construct(string $plate, Label $label)
     {
-        $this->id = $id;
+        $this->id = Uuid::v4()->toRfc4122();
+        $this->plate = $plate;
         $this->createdAt = new \DateTime();
         $this->label = $label;
     }
@@ -44,6 +48,11 @@ class Vehicle
     public function getId(): string
     {
         return $this->id;
+    }
+
+    public function getPlate(): string
+    {
+        return $this->plate;
     }
 
     public function getCreatedAt(): DateTime

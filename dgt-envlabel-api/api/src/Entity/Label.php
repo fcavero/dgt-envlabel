@@ -29,10 +29,7 @@ class Label
      */
     private string $description;
 
-    /**
-     * @param string $tag
-     * @param string $description
-     */
+
     public function __construct(string $tag, string $description)
     {
         $this->tag = $tag;

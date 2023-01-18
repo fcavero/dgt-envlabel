@@ -44,4 +44,6 @@ RUN mkdir -p /appdata/www
 
 USER appuser
 
+COPY ./supervisor/download-labels-file-worker.conf /etc/supervisor/conf.d
+
 WORKDIR /appdata/www
