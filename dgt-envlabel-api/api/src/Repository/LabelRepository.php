@@ -22,15 +22,6 @@ class LabelRepository extends ServiceEntityRepository
         parent::__construct($registry, Label::class);
     }
 
-    public function findByIdOrFail(int $id): Label
-    {
-        if (null === $label = $this->find($id)) {
-            throw LabelNotFoundException::fromLabelId($id);
-        }
-
-        return $label;
-    }
-
     public function save(Label $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);

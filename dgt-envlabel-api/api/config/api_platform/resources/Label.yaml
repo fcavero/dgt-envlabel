@@ -1,10 +1,8 @@
 App\Entity\Label:
     attributes:
         normalization_context:
-            groups: [label_read]
+            groups: [read]
+    collectionOperations: ~
     itemOperations:
         get:
             method: GET
-            controller: App\Api\Action\GetEnvLabel
-            openapi_context:
-                summary: Gets the environmental label data of a given ID.
