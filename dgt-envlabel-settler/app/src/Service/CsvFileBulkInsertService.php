@@ -11,9 +11,11 @@ use Psr\Log\LoggerInterface;
 
 class CsvFileBulkInsertService
 {
-    private string $esPlateRegexp;
+    private const NEW_VEHICLE_SQL = 'INSERT INTO envlabel.t_vehicle (txt_plate, envlabel_id) '.
+        'SELECT :plate, id FROM envlabel.tt_envlabel WHERE txt_dgt_tag = :tag '.
+        'ON CONFLICT DO NOTHING';
 
-    private string $insertStatement;
+    private string $esPlateRegexp;
 
     private EntityManagerInterface $entityManager;
 
@@ -21,13 +23,11 @@ class CsvFileBulkInsertService
 
 
     public function __construct(
-        string $insertStatement,
         string $esPlateRegexp,
         EntityManagerInterface $entityManager,
         LoggerInterface $logger
     )
     {
-        $this->insertStatement = $insertStatement;
         $this->esPlateRegexp = $esPlateRegexp;
         $this->entityManager = $entityManager;
         $this->logger = $logger;
@@ -45,14 +45,14 @@ class CsvFileBulkInsertService
             // Need to check if line starts with a valid spanish license plate
             if ($this->checkValidESPlate($items[0])) {
                 $this->entityManager->getConnection()
-                    ->executeQuery($this->insertStatement, ['plate' => $items[0],'tag' => $items[1],]);
+                    ->executeQuery(self::NEW_VEHICLE_SQL, ['plate' => $items[0],'tag' => $items[1],]);
             }
         }
     }
 
     private function getLines(string $filepath): Generator
     {
-        $this->logger->info(\sprintf('Starting %s file streaming...', $filepath));
+        $this->logger->debug(\sprintf('Starting %s file streaming...', $filepath));
         $file = fopen($filepath, 'rb');
 
         try {
@@ -61,7 +61,7 @@ class CsvFileBulkInsertService
             }
 
         } finally {
-            $this->logger->info(\sprintf('Closing %s file!', $filepath));
+            $this->logger->debug(\sprintf('Closing %s file!', $filepath));
             fclose($file);
         }
     }

@@ -1,6 +1,0 @@
-#!/bin/bash
-
-git --global config user.name "user.name"
-git --global config user.email "user.email"
-
-symfony new api --version="5.4.*"

@@ -1,5 +1,4 @@
 parameters:
-    app.insert_statement: '%env(INSERT_STATEMENT)%'
     app.es_license_plate_regexp: '%env(string:ES_LICENSE_PLATE_REGEXP)%'
 
 services:
@@ -16,5 +15,4 @@ services:
 
     Settler\Service\CsvFileBulkInsertService:
         arguments:
-            $insertStatement: '%app.insert_statement%'
             $esPlateRegexp: '%app.es_license_plate_regexp%'

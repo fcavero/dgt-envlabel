@@ -26,16 +26,11 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: 100 }
 
-    App\Service\DownloadDgtEnvLabelsFileService:
+    App\Command\DownloadDgtEnvLabelsFileCommand:
         arguments:
             $zipStorageDir: '%app.tmp_storage_dir%'
             $zipFilename: '%app.dgt_environmental_labels_zip_file%'
             $dgtEnvLabelsUrl: '%app.dgt_environmental_labels_url%'
-
-    App\Service\EnvLabelsFileUnzipperService:
-        arguments:
-            $zipStorageDir: '%app.tmp_storage_dir%'
-            $zipFilename: '%app.dgt_environmental_labels_zip_file%'
 
     App\Service\EnvLabelsFileCutterService:
         arguments:
