@@ -53,7 +53,7 @@ class SendEnvLabelCsvMessagesService
             );
             $this->logger->debug(sprintf('File sent to RabbitMQ [ %s ]', $file->getFilename()));
             $messages++;
-            //sleep($delayBetweenDeliveries);// Take it easy...
+            sleep($delayBetweenDeliveries);// Take it easy...
         }
         $this->logger->info('All messages have been sent to RabbitMQ successfully.');
 
