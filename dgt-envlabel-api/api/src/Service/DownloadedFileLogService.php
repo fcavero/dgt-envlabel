@@ -28,10 +28,10 @@ class DownloadedFileLogService
     {
         $resultSet = $this->entityManager->getConnection()->executeQuery(self::LAST_HASH_SQL);
         if (false === $lastHash = $resultSet->fetchOne()) {
-            return true; // The very first file. Impressive.
+            return true; // The very first file downloaded. Impressive.
         }
 
-        return ($hash === $lastHash);
+        return ($hash !== $lastHash);
     }
 
     /**

@@ -50,7 +50,7 @@ class ProcessEnvLabelsCommand extends Command
 
         if ($this->doProcessActions($input, $output)) {
             $output->writeln([" → Going further → let's send those messages to RabbitMQ!", '',]);
-            if ($this->runSendEnvLabelCsvMessagesCommand($output)) {
+            if (Command::SUCCESS === $this->runSendEnvLabelCsvMessagesCommand($output)) {
 
                 $this->printFinishMessage($output);
                 return Command::SUCCESS;

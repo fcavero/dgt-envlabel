@@ -7,7 +7,6 @@ namespace App\Service;
 use App\Exception\FilesystemException;
 use App\Messenger\Message\EnvLabelCsvMessage;
 use App\Messenger\RoutingKey;
-use Faker\Core\File;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Messenger\Bridge\Amqp\Transport\AmqpStamp;
@@ -17,8 +16,6 @@ class SendEnvLabelCsvMessagesService
 {
     private string $csvStorageDir;
 
-    private FilesystemService $filesystemService;
-
     private MessageBusInterface $messageBus;
 
     private LoggerInterface $logger;
@@ -26,13 +23,11 @@ class SendEnvLabelCsvMessagesService
 
     public function __construct(
         string $csvStorageDir,
-        FilesystemService $filesystemService,
         MessageBusInterface $messageBus,
         LoggerInterface $logger
     )
     {
         $this->csvStorageDir = $csvStorageDir;
-        $this->filesystemService = $filesystemService;
         $this->messageBus = $messageBus;
         $this->logger = $logger;
     }
@@ -58,14 +53,9 @@ class SendEnvLabelCsvMessagesService
             );
             $this->logger->debug(sprintf('File sent to RabbitMQ [ %s ]', $file->getFilename()));
             $messages++;
-            sleep($delayBetweenDeliveries);
+            //sleep($delayBetweenDeliveries);// Take it easy...
         }
         $this->logger->info('All messages have been sent to RabbitMQ successfully.');
-
-        foreach ($finder as $file) {
-            $this->filesystemService->removeSingleFile($file->getRealPath());
-        }
-        $this->logger->info('All CSV files have been sent to /dev/null successfully.');
 
         return $messages;
     }

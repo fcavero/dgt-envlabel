@@ -37,12 +37,11 @@ class SendEnvLabelCsvMessagesCommand extends Command
     {
         $output->writeln([\sprintf('%s %s → Starting...', date('Y-m-d H:i:s'), $this->getName()),]);
 
-        $messages = $this->sendEnvLabelCsvMessagesService
-            ->scanAndSend($input->getArgument('delayBetweenDeliveries'));
+        $delay = $input->getArgument('delayBetweenDeliveries');
+        $messages = $this->sendEnvLabelCsvMessagesService->scanAndSend($delay);
 
         $output->writeln([
             sprintf(' → %s messages ─one per each CSV file─ have been sent.', $messages), '',
-            \sprintf('%s %s → Finished', date('Y-m-d H:i:s'), $this->getName()), '',
         ]);
 
         return Command::SUCCESS;

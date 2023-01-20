@@ -17,6 +17,8 @@ class CsvFileBulkInsertService
 
     private string $esPlateRegexp;
 
+    private FilesystemService $filesystemService;
+
     private EntityManagerInterface $entityManager;
 
     private LoggerInterface $logger;
@@ -24,11 +26,13 @@ class CsvFileBulkInsertService
 
     public function __construct(
         string $esPlateRegexp,
+        FilesystemService $filesystemService,
         EntityManagerInterface $entityManager,
         LoggerInterface $logger
     )
     {
         $this->esPlateRegexp = $esPlateRegexp;
+        $this->filesystemService = $filesystemService;
         $this->entityManager = $entityManager;
         $this->logger = $logger;
     }
@@ -63,6 +67,7 @@ class CsvFileBulkInsertService
         } finally {
             $this->logger->debug(\sprintf('Closing %s file!', $filepath));
             fclose($file);
+            $this->filesystemService->removeSingleFile($filepath);
         }
     }
 

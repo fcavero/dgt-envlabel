@@ -85,8 +85,8 @@ class DownloadDgtEnvLabelsFileCommand extends Command
             return Command::SUCCESS;
         }
 
-        $this->printFinishMessage($output);
         $this->purgeZipFile($zipFilepath, $output);
+        $this->printFinishMessage($output);
 
         return  Command::FAILURE;
     }
@@ -114,6 +114,9 @@ class DownloadDgtEnvLabelsFileCommand extends Command
         $output->writeln([" → Going further → let's unzip & split the downloaded file!", '',]);
         if (Command::SUCCESS === $this->runProcessEnvLabelsCommand($zipFilepath, $output)) {
             $this->downloadedFileLogService->logFileHash($hash);
+            $output->writeln([
+                ' → Downloaded file hash has been logged!'
+            ]);
 
             return $this->purgeZipFile($zipFilepath, $output);
         }
