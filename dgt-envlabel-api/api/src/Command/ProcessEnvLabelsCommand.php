@@ -91,7 +91,7 @@ class ProcessEnvLabelsCommand extends Command
     private function runSendEnvLabelCsvMessagesCommand(OutputInterface $output): int
     {
         if (null !== ($command = $this->getApplication()->find('app:send-environmental-labels-csv-messages'))) {
-            $commandArrayInput = new ArrayInput(['delayBetweenDeliveries' => self::DELAY_BETWEEN_DELIVERIES,]);
+            $commandArrayInput = new ArrayInput([]);
             return $command->run($commandArrayInput, $output);
         }
         return Command::INVALID;
