@@ -1,12 +1,12 @@
 # RabbitMQ en Docker
 
-Levantamos un contenedor _Docker_ con una instancia de [RabbitMQ](https://www.rabbitmq.com/).
+Levanta un contenedor *Docker* con una instancia de [RabbitMQ](https://www.rabbitmq.com/) de manera rápida, fácil y para toda la familia.
 
-La imagen empleada por defecto es `rabbitmq:3-management`, que incluye por defecto el _plug-in_ de administración web.
+La imagen empleada por defecto es `rabbitmq:3-management`, que trae de serie el *plugin Management*, que facilita mucho la administración a través de un navegador web.
 
 ## Despliegue
 
-Como es obvio, es posible usar los comandos de _Docker_ a calzón quitao, pero para facilitar la cosa existe la posibilidad de usar un fichero `Makefile` al efecto:
+Como es obvio, es posible usar los comandos de *Docker* a calzón quitao, pero para facilitar la cosa existe la posibilidad de usar un fichero `Makefile` al efecto:
 
 ```shell
 ❯ make
@@ -25,18 +25,16 @@ Makefile  logs-rabbit            Show logs of the RabbitMQ container (with --fol
 Podemos personalizar los argumentos de `docker run` para adecuarlos a nuestras necesidades; dichos valores se indican en un fichero `.env` que se invoca desde el `Makefile`:
 
 * `RABBIT_NAME` → Nombre del contenedor (por defecto, `rabbitmq`).
-* `RABBIT_PORT` → Puerto de la instancia de _RabbitMQ_ (por defecto, `5672`).
-* `RABBIT_MGMT_PORT` → Puerto usado por el _plug-in_ de administración (por defecto, `15672`).
+* `RABBIT_PORT` → Puerto de la instancia de *RabbitMQ* (por defecto, `5672`).
+* `RABBIT_MGMT_PORT` → Puerto usado por el *plugin Management* (por defecto, `15672`).
 
-Es posible, además, habilitar los _plug-ins_ que incorpora _RabbitMQ_ en la construcción del contenedor. Para ello, crearemos un fichero `plugins_enabled` con una lista simple de los _plug-ins_ que necesitamos; sí, el punto del final debe mantenerse:
+Es posible, además, habilitar más *plugins* de *RabbitMQ* en la construcción del contenedor. Para ello, crearemos un fichero `plugins_enabled` con una lista simple de los que necesitamos; sí, el punto del final debe mantenerse:
 
 ```erlang
 [rabbitmq_shovel,rabbitmq_shovel_management,rabbitmq_management,rabbitmq_stomp].
 ```
 
-Con todo preparado, podremos lanzar la creación del contenedor.
-
-¡Adelante las rotativas!
+Con todo preparado, podremos lanzar la creación del contenedor:
 
 ```shell
 ❯ make run
@@ -135,8 +133,46 @@ docker logs --follow 'rabbitmq'
 2022-10-03 14:48:47.397556+00:00 [info] <0.473.0>  * rabbitmq_management_agent
 ```
 
-En las últimas líneas veremos el estado de los _plug-ins_ que hemos habilitado.
+En las últimas líneas veremos el estado de los *plugins* que hemos habilitado.
 
-Entre ellos estará el de _management_ a través del navegador web, en la URL `http://localhost:15672/`:
+Entre ellos estará el *Management* a través del navegador web, en la URL `http://<mi-sitio>:15672/`:
 
 ![Empty RabbitMQ](./doc/rabbitmq-out-of-the-box.png?raw=true "RabbitMQ out of the box")
+
+El usuario por defecto es `guest / guest`, pero es algo que, en un entorno distinto del de «desarrollo», cambiaremos nomás hayamos entrado, ¿verdad?
+
+## Acceso al *Management* de RabbitMQ por TLS
+
+La manera más sencilla de proteger nuestro *Management* bajo el paraguas TLS es servirlo con *Nginx*. En el fichero de configuración del sitio añadimos un *upstream* y un par de *locations* (aunque, en sentido estricto, solo haremos uso de una de ellas):
+
+```shell
+upstream rabbitmq {        
+    least_conn;
+    server localhost:15672 weight=10 max_fails=3 fail_timeout=30s;
+}
+
+server {
+[...]
+
+    location /rabbitmq/api/ {
+        rewrite ^ $request_uri;
+        rewrite ^/rabbitmq/api/(.*) /api/$1 break;
+        return 400;
+        proxy_pass http://rabbitmq$uri;
+    }
+
+    location /rabbitmq {
+        rewrite ^/rabbitmq$ /rabbitmq/ permanent;
+        rewrite ^/rabbitmq/(.*)$ /$1 break;
+        proxy_pass http://rabbitmq;
+        proxy_buffering                    off;
+        proxy_set_header Host              $http_host;
+        proxy_set_header X-Real-IP         $remote_addr;
+        proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+[...]
+}
+```
+
+Ahora el acceso a la administración de *RabbitMQ* será: `https://<mi-sitio>/rabbitmq`
