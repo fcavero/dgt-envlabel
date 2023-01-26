@@ -1,8 +1,10 @@
 App\Entity\Vehicle:
     attributes:
         id:
-            groups: [vehicle_read]
+            groups: [read]
+        plate:
+            groups: [read]
         createdAt:
-            groups: [vehicle_read]
+            groups: [read]
         label:
-            groups: [vehicle_read]
+            groups: [read]

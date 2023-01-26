@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use DateTime;
@@ -7,10 +9,10 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
 
 /**
- * @ORM\Table(name="envlabel.t_vehicle")
- * @ORM\Entity(repositoryClass="App\Repository\VehicleRepository")
+ * @ORM\Table(name="envlabel.t_downloaded_file_log")
+ * @ORM\Entity(repositoryClass="App\Repository\DownloadedFileLogRepository")
  */
-class Vehicle
+class DownloadedFileLog
 {
     /**
      * @ORM\Id()
@@ -20,28 +22,21 @@ class Vehicle
     private string $id;
 
     /**
-     * @ORM\Column(type="string", name="txt_plate")
-     */
-    private string $plate;
-
-    /**
      * @ORM\Column(type="datetime", name="tms_creation")
      */
     private DateTime $createdAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Label")
-     * @ORM\JoinColumn(name="envlabel_id", referencedColumnName="id")
+     * @ORM\Column(type="string", name="file_hash")
      */
-    private Label $label;
+    private string $fileHash;
 
 
-    public function __construct(string $plate, Label $label)
+    public function __construct(string $fileHash)
     {
         $this->id = Uuid::v4()->toRfc4122();
-        $this->plate = $plate;
         $this->createdAt = new \DateTime();
-        $this->label = $label;
+        $this->fileHash = $fileHash;
     }
 
 
@@ -50,19 +45,14 @@ class Vehicle
         return $this->id;
     }
 
-    public function getPlate(): string
-    {
-        return $this->plate;
-    }
-
     public function getCreatedAt(): DateTime
     {
         return $this->createdAt;
     }
 
-    public function getLabel(): Label
+    public function getFileHash(): string
     {
-        return $this->label;
+        return $this->fileHash;
     }
 
 }

@@ -21,14 +21,18 @@ class SendEnvLabelCsvMessagesService
     private LoggerInterface $logger;
 
 
-    public function __construct(string $csvStorageDir, MessageBusInterface $messageBus, LoggerInterface $logger)
+    public function __construct(
+        string $csvStorageDir,
+        MessageBusInterface $messageBus,
+        LoggerInterface $logger
+    )
     {
         $this->csvStorageDir = $csvStorageDir;
         $this->messageBus = $messageBus;
         $this->logger = $logger;
     }
 
-    public function scanDirAndSendMessages(): int
+    public function scanAndSend(): int
     {
         $finder = new Finder();
 
@@ -42,13 +46,14 @@ class SendEnvLabelCsvMessagesService
 
         $messages = 0;
         foreach ($finder as $file) {
+            $filepath = $file->getRealPath();
             $this->messageBus->dispatch(
-                new EnvLabelCsvMessage($file->getRealPath()),
+                new EnvLabelCsvMessage($filepath),
                 [new AmqpStamp(RoutingKey::CSV_QUEUE)]
             );
+            $this->logger->debug(sprintf('File sent to RabbitMQ [ %s ]', $file->getFilename()));
             $messages++;
         }
-
         $this->logger->info('All messages have been sent to RabbitMQ successfully.');
 
         return $messages;

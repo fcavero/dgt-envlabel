@@ -27,11 +27,11 @@ terminate: ## Stops the containers (with --remove-orphans option set)
 restart: ## Restarts the containers
 	$(MAKE) stop && $(MAKE) run
 
-#--> Backend commands
 code-style: ## Runs php-cs to fix code styling following Symfony rules
 	U_ID=${UID} docker exec -it -u ${UID} $(DOCKER_PHP) php-cs-fixer fix src --rules=@Symfony
 	U_ID=${UID} docker exec -it -u ${UID} $(DOCKER_PHP) php-cs-fixer fix tests --rules=@Symfony
 
+#--> Backend commands
 ssh-php: ## SSHs into the PHP container as unprivileged user
 	U_ID=${UID} docker exec -it -u ${UID} $(DOCKER_PHP) bash
 
@@ -49,6 +49,20 @@ api-logs-dev: ## Tails the Symfony dev log
 
 api-logs-prod: ## Tails the Symfony prod log
 	U_ID=${UID} docker exec -it -u ${UID} $(DOCKER_PHP) tail -f api/var/log/prod.log
+
+restart-supervisord: ## (Re)Starts supervisord
+	U_ID=${UID} docker exec -it -u root $(DOCKER_PHP) /etc/init.d/supervisor stop
+	U_ID=${UID} docker exec -it -u root $(DOCKER_PHP) /etc/init.d/supervisor start
+	U_ID=${UID} docker exec -it -u root $(DOCKER_PHP) /etc/init.d/supervisor status
+
+update-worker: ## Prepares supervisord due to manage Symfony worker
+	U_ID=${UID} docker exec -it -u root $(DOCKER_PHP) supervisorctl update
+
+run-worker: ## Runs Symfony worker via supervisord
+	U_ID=${UID} docker exec -it -u root $(DOCKER_PHP) supervisorctl start download-labels-file-command:*
+
+worker-status: ## Shows the supervisord managed Symfony worker status
+	U_ID=${UID} docker exec -it -u root $(DOCKER_PHP) supervisorctl status
 #<-- End backend commands
 
 #--> Docker specific commands

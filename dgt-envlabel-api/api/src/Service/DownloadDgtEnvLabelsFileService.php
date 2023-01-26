@@ -14,26 +14,13 @@ use function sprintf;
 
 class DownloadDgtEnvLabelsFileService
 {
-    private string $zipStorageDir;
-    private string $zipFilename;
-    private string $dgtEnvLabelsUrl;
-
     private FilesystemService $filesystemService;
 
     private LoggerInterface $logger;
 
 
-    public function __construct(
-        string $zipStorageDir,
-        string $zipFilename,
-        string $dgtEnvLabelsUrl,
-        FilesystemService $filesystemService,
-        LoggerInterface $logger
-    )
+    public function __construct(FilesystemService $filesystemService, LoggerInterface $logger)
     {
-        $this->zipStorageDir = $zipStorageDir;
-        $this->zipFilename = $zipFilename;
-        $this->dgtEnvLabelsUrl = $dgtEnvLabelsUrl;
         $this->filesystemService = $filesystemService;
         $this->logger = $logger;
     }
@@ -41,34 +28,34 @@ class DownloadDgtEnvLabelsFileService
     /**
      * @throws TransportExceptionInterface
      */
-    public function download(): string
+    public function download(string $dgtEnvLabelsUrl, string $zipStorageDir, string $zipFilename): string
     {
-        $this->filesystemService->createDir($this->zipStorageDir);
+        $this->filesystemService->createDir($zipStorageDir);
 
         $client = new CurlHttpClient();
-        $url = $this->dgtEnvLabelsUrl . $this->zipFilename;
-        $filepath = $this->zipStorageDir . $this->zipFilename;
+        $url = $dgtEnvLabelsUrl . $zipFilename;
+        $zipFilepath = $zipStorageDir . $zipFilename;
         $response = $client->request('GET', $url);
 
         if (Response::HTTP_OK !== ($statusCode = $response->getStatusCode())) {
             throw DownloadDgtEnvLabelsFileException::fromRemoteServerRequest($url, $statusCode);
         }
 
-        $fileHandler = fopen($filepath, 'wb');
+        $fileHandler = fopen($zipFilepath, 'wb');
         foreach ($client->stream($response) as $chunk) {
             fwrite($fileHandler, $chunk->getContent());
         }
 
-        if (!$this->filesystemService->checkIfExists($filepath)) {
+        if (!$this->filesystemService->checkIfExists($zipFilepath)) {
             $this->logger->error(
                 sprintf('Environmental labels file has not been downloaded from DGT [ %s ]', $url));
-            throw FilesystemException::fileDoesNotExist($filepath);
+            throw FilesystemException::fileDoesNotExist($zipFilepath);
         }
 
         $this->logger->info(
-            sprintf('Environmental labels file has been downloaded successfully from DGT [ %s ]', $filepath));
+            sprintf('Environmental labels file has been downloaded successfully from DGT [ %s ]', $zipFilepath));
 
-        return $filepath;
+        return md5_file($zipFilepath);
     }
 
 }

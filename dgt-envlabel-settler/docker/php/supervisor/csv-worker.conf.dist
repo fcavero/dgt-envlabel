@@ -1,8 +1,9 @@
-[program:msg-consume-csv]
-command=/appdata/www/bin/csv_listener
+[program:csv-message-consume]
 user=appuser
+command=php /appdata/www/app/bin/console messenger:consume amqp_csv --limit=5 -vv
 numprocs=1
-startsecs=0
+startsecs=5
 autostart=true
 autorestart=true
+startretries=10
 process_name=%(program_name)s_%(process_num)02d

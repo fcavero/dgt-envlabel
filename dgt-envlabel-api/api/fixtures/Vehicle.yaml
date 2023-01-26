@@ -1,4 +1,37 @@
 App\Entity\Vehicle:
-    vehicle_{1..10}:
-        id: <id()>
-        label: '@label*'
+    Vehicle-0:
+        __construct:
+            plate: 0000BBB
+            label: 9
+    Vehicle-1:
+        __construct:
+            plate: 0001DDD
+            label: 4
+    Vehicle-2:
+        __construct:
+            plate: 0002FFF
+            label: 8
+    Vehicle-3:
+        __construct:
+            plate: 0003GGG
+            label: 3
+    Vehicle-4:
+        __construct:
+            plate: 0004HHH
+            label: 7
+    Vehicle-5:
+        __construct:
+            plate: 0005JJJ
+            label: 2
+    Vehicle-6:
+        __construct:
+            plate: 0006KKK
+            label: 6
+    Vehicle-7:
+        __construct:
+            plate: 0007LLL
+            label: 1
+    Vehicle-8:
+        __construct:
+            plate: 0008MMM
+            label: 5

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\Vehicle;
@@ -25,10 +27,28 @@ class VehicleRepository extends ServiceEntityRepository
     public function findByIdOrFail(string $id): Vehicle
     {
         if (null === $vehicle = $this->find($id)) {
-            throw VehicleNotFoundException::fromVehiclePlate($id);
+            throw VehicleNotFoundException::fromVehicleId($id);
         }
 
         return $vehicle;
+    }
+
+    public function findLatestEnvLabelByPlateOrFail(string $plate): Vehicle
+    {
+        if (null === $vehicle = $this->findBy(['plate' => $plate,], ['createdAt' => 'DESC',], 1)) {
+            throw VehicleNotFoundException::fromVehiclePlate($plate);
+        }
+
+        return $vehicle[0];
+    }
+
+    public function findAllEnvLabelsByPlateOrFail(string $plate): array
+    {
+        if (null === $vehicles = $this->findBy(['plate' => $plate,], ['createdAt' => 'DESC',])) {
+            throw VehicleNotFoundException::fromVehiclePlate($plate);
+        }
+
+        return $vehicles;
     }
 
     public function save(Vehicle $entity, bool $flush = false): void

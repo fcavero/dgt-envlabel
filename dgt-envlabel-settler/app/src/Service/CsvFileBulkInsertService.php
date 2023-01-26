@@ -11,7 +11,13 @@ use Psr\Log\LoggerInterface;
 
 class CsvFileBulkInsertService
 {
+    private const NEW_VEHICLE_SQL = 'INSERT INTO envlabel.t_vehicle (txt_plate, envlabel_id) '.
+        'SELECT :plate, id FROM envlabel.tt_envlabel WHERE txt_dgt_tag = :tag '.
+        'ON CONFLICT DO NOTHING';
+
     private string $esPlateRegexp;
+
+    private FilesystemService $filesystemService;
 
     private EntityManagerInterface $entityManager;
 
@@ -20,11 +26,13 @@ class CsvFileBulkInsertService
 
     public function __construct(
         string $esPlateRegexp,
+        FilesystemService $filesystemService,
         EntityManagerInterface $entityManager,
         LoggerInterface $logger
     )
     {
         $this->esPlateRegexp = $esPlateRegexp;
+        $this->filesystemService = $filesystemService;
         $this->entityManager = $entityManager;
         $this->logger = $logger;
     }
@@ -41,17 +49,14 @@ class CsvFileBulkInsertService
             // Need to check if line starts with a valid spanish license plate
             if ($this->checkValidESPlate($items[0])) {
                 $this->entityManager->getConnection()
-                    ->insert('envlabel.tmp_file', [
-                        'txt_plate'   => $items[0],
-                        'txt_dgt_tag' => $items[1],
-                    ]);
+                    ->executeQuery(self::NEW_VEHICLE_SQL, ['plate' => $items[0],'tag' => $items[1],]);
             }
         }
     }
 
     private function getLines(string $filepath): Generator
     {
-        $this->logger->info(\sprintf('Starting %s file streaming...', $filepath));
+        $this->logger->debug(\sprintf('Starting %s file streaming...', $filepath));
         $file = fopen($filepath, 'rb');
 
         try {
@@ -60,8 +65,9 @@ class CsvFileBulkInsertService
             }
 
         } finally {
-            $this->logger->info(\sprintf('Closing %s file!', $filepath));
+            $this->logger->debug(\sprintf('Closing %s file!', $filepath));
             fclose($file);
+            $this->filesystemService->removeSingleFile($filepath);
         }
     }
 

@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\Label;
-use App\Exception\Label\LabelNotFoundException;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -20,15 +21,6 @@ class LabelRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Label::class);
-    }
-
-    public function findByIdOrFail(int $id): Label
-    {
-        if (null === $label = $this->find($id)) {
-            throw LabelNotFoundException::fromLabelId($id);
-        }
-
-        return $label;
     }
 
     public function save(Label $entity, bool $flush = false): void

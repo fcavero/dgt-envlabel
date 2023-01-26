@@ -61,6 +61,8 @@ class EnvLabelsFileCutterService
         $this->logger->info(
             sprintf('Environmental labels file has been chopped [ %s → %s ]', $csvFilepath, $this->csvStorageDir));
 
+        $this->filesystemService->removeSingleFile($csvFilepath);
+
         return true;
     }
 

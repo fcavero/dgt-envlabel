@@ -1,8 +1,8 @@
-App\Entity\Label:
+App\Entity\DownloadedFileLog:
     attributes:
         id:
             groups: [read]
-        tag:
+        createdAt:
             groups: [read]
-        description:
+        fileHash:
             groups: [read]

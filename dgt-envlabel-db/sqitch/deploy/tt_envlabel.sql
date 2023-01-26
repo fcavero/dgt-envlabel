@@ -31,6 +31,7 @@ INSERT INTO "envlabel".tt_envlabel (id, txt_dgt_tag, txt_description) VALUES
 ,(7,'16MC','C')
 ,(8,'16MB','B')
 ,(9,'SIN DISTINTIVO','SIN DISTINTIVO')
+ON CONFLICT DO NOTHING
 ;
 
 COMMIT;
