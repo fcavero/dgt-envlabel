@@ -18,3 +18,25 @@ El modelo de datos de esta API es absurdamente simple:
             WHERE txt_dgt_tag = :tag
             ON CONFLICT DO NOTHING
     ```
+
+## Estructura
+
+La estructura es la clásica de [Sqitch](https://sqitch.org/):
+
+```text
+└── dgt-envlabel-db
+    └── sqitch
+        ├── deploy
+        ├── revert
+        └── verify
+```
+
+Donde:
+
+* *sqitch/deploy* → *Scripts* de PL/pgSQL para desplegar el modelo de datos.
+* *sqitch/revert* → *Scripts* de PL/pgSQL para revertir los cambios cuando el despliegue falla miserablemente.
+* *sqitch/verify* → *Scripts* de PL/pgSQL para verificar el modelo de datos.
+
+## Licencia
+
+DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE (WTFPL). Por favor, revisad el [fichero de licencia](./LICENSE) para más información.

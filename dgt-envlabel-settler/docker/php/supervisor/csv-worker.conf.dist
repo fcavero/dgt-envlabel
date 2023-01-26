@@ -1,6 +1,6 @@
 [program:csv-message-consume]
-command=php /appdata/www/app/bin/console messenger:consume amqp_csv --memory-limit=256M
 user=appuser
+command=php /appdata/www/app/bin/console messenger:consume amqp_csv --limit=5 -vv
 numprocs=1
 startsecs=5
 autostart=true

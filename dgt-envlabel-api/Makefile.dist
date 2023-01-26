@@ -50,18 +50,18 @@ api-logs-dev: ## Tails the Symfony dev log
 api-logs-prod: ## Tails the Symfony prod log
 	U_ID=${UID} docker exec -it -u ${UID} $(DOCKER_PHP) tail -f api/var/log/prod.log
 
-restart-supervisor: ## (Re)Starts Supervisor demon
+restart-supervisord: ## (Re)Starts supervisord
 	U_ID=${UID} docker exec -it -u root $(DOCKER_PHP) /etc/init.d/supervisor stop
 	U_ID=${UID} docker exec -it -u root $(DOCKER_PHP) /etc/init.d/supervisor start
 	U_ID=${UID} docker exec -it -u root $(DOCKER_PHP) /etc/init.d/supervisor status
 
-update-workers: ## Prepares Supervisor demon due to manage Symfony workers
+update-worker: ## Prepares supervisord due to manage Symfony worker
 	U_ID=${UID} docker exec -it -u root $(DOCKER_PHP) supervisorctl update
 
-run-workers: ## Runs Symfony workers via supervisor demon
+run-worker: ## Runs Symfony worker via supervisord
 	U_ID=${UID} docker exec -it -u root $(DOCKER_PHP) supervisorctl start download-labels-file-command:*
 
-workers-status: ## Shows the Supervisor demon managed Symfony workers status
+worker-status: ## Shows the supervisord managed Symfony worker status
 	U_ID=${UID} docker exec -it -u root $(DOCKER_PHP) supervisorctl status
 #<-- End backend commands
 

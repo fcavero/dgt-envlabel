@@ -8,13 +8,14 @@ Este componente tiene dos partes bien diferenciadas:
 ## Estructura
 
 ```text
-.
-└── dgt-envlabel-api
-    ├── api
-    └── docker
-        ├── nginx
-        └── php
-            └── supervisor
+├── dgt-envlabel-api
+│   ├── api
+│   └── docker
+│       ├── nginx
+│       └── php
+│           └── supervisor
+└── tmp
+    └── splits
 ```
 
 Donde:
@@ -46,7 +47,7 @@ Makefile  ssh-php-root              SSHs into the PHP container as root
 Makefile  ssh-web-root              SSHs into the web server container as root
 Makefile  api-logs-dev              Tails the Symfony dev log
 Makefile  api-logs-prod             Tails the Symfony prod log
-Makefile  restart-supervisor        (Re)Starts Supervisor demon
+Makefile  restart-supervisord       (Re)Starts Supervisor demon
 Makefile  update-worker             Prepares Supervisor demon due to manage Symfony worker
 Makefile  run-worker                Runs Symfony worker via supervisor demon
 Makefile  workers-status            Shows the Supervisor demon managed Symfony workers status
@@ -87,8 +88,6 @@ Esta API no prevee ningún tipo de autenticación, y cuenta con unos *EndPoints*
 La documentación de la API está disponible en `/v1/docs`, siguiendo la [especificación OpenAPI de Swagger](https://swagger.io/specification/):
 
 ![Swagger OpenAPI](./swagger-openapi.png?raw=true "API docs via Swagger OpenAPI")
-
-
 
 #### Dame los tipos de distintivos ambientales
 
@@ -311,3 +310,4 @@ DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE (WTFPL). Por favor, revisad el [fich
 
 * Añadir otro *EndPoint* para poder recuperar el último fichero procesado con éxito.
 * Añadir filtros de fecha.
+* Añadir los logs de *supervisord* como opción del `Makefile`.
