@@ -22,6 +22,7 @@ Donde:
 
 * *api* → Proyecto de *Symfony*.
 * *docker* → Ficheros de *Docker* para construir los contenedores de *Nginx* y *PHP-FPM*, y todo lo que les cuelga.
+* *tmp* → Volumen de trabajo con los ficheros que se monta en el contenedor *PHP-FPM*.
 
 ## Despliegue
 
