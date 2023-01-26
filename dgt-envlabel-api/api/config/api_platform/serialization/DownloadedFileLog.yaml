@@ -1,0 +1,8 @@
+App\Entity\DownloadedFileLog:
+    attributes:
+        id:
+            groups: [read]
+        createdAt:
+            groups: [read]
+        fileHash:
+            groups: [read]

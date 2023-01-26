@@ -66,63 +66,7 @@ Como no hay prisa y el número de registros a tratar es muy grande (más de 30 m
 
 ## Hablar es fácil. Enséñame la API
 
-Esta API no prevee ningún tipo de autenticación, y cuenta con unos *EndPoints* muy básicos.
-
-### Dame los tipos de distintivos ambientales
-
-`GET /v1/labels`
-
-```json
-[
-    {
-        "id": 1,
-        "tag": "16T0",
-        "description": "CERO EMISIONES"
-    },
-    {
-        "id": 2,
-        "tag": "16TE",
-        "description": "ECO"
-    },
-    {
-        "id": 3,
-        "tag": "16TC",
-        "description": "C"
-    },
-    {
-        "id": 4,
-        "tag": "16TB",
-        "description": "B"
-    },
-    {
-        "id": 5,
-        "tag": "16M0",
-        "description": "CERO EMISIONES"
-    },
-    {
-        "id": 6,
-        "tag": "16ME",
-        "description": "ECO"
-    },
-    {
-        "id": 7,
-        "tag": "16MC",
-        "description": "C"
-    },
-    {
-        "id": 8,
-        "tag": "16MB",
-        "description": "B"
-    },
-    {
-        "id": 9,
-        "tag": "SIN DISTINTIVO",
-        "description": "SIN DISTINTIVO"
-    }
-]
-```
-
-### Toma esta matrícula; dame su distintivo ambiental más reciente
+Sin ser el único, el *EndPoint* más útil es el de recuperar un distintivo ambiental a partir de una matrícula:
 
 `GET /v1/vehicles/latest/0000KKK`
 
@@ -139,37 +83,7 @@ Esta API no prevee ningún tipo de autenticación, y cuenta con unos *EndPoints*
 }
 ```
 
-Atención: el miembro «createdAt» muestra el *timestamp* de registro en el sistema, no al de definición del distintivo en la DGT. La DGT solo nos ofrece la matrícula y el valor del distintivo en el momento en el que generan el fichero, y un fichero puede haber sido generado y subido varios días antes de ser descargado y procesado.
-
-### Toma esta matrícula; dame todos sus distintivos ambientales
-
-`GET /v1/vehicles/all/0000BBB`
-
-```json
-{
-    "plate": "0000BBB",
-    "labels": [
-        {
-            "createdAt": "2023-01-20T15:07:32+01:00",
-            "label": {
-                "id": 2,
-                "tag": "16TE",
-                "description": "ECO"
-            }
-        },
-        {
-            "createdAt": "2022-12-08T08:04:40+01:00",
-            "label": {
-                "id": 8,
-                "tag": "16MB",
-                "description": "B"
-            }
-        }
-    ]
-}
-```
-
-Si la matrícula solo tiene un distintivo, la respuesta es similar a la del *EndPoint*  anterior. Con más de un distintivo, los bloques se ordenarán por la fecha de registro *(createdAt)*, del más reciente al más antiguo.
+En el [README.md](./dgt-envlabel-api/README.md) del componente de la API se detalla este y el resto de *EndPoints* de la API.
 
 ## Estructura
 

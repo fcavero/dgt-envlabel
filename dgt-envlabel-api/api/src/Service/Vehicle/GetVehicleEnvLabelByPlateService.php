@@ -6,7 +6,6 @@ namespace App\Service\Vehicle;
 
 use App\Entity\Vehicle;
 use App\Repository\VehicleRepository;
-use Symfony\Component\HttpFoundation\JsonResponse;
 
 class GetVehicleEnvLabelByPlateService
 {

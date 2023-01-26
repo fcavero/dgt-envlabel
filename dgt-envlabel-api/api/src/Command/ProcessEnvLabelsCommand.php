@@ -15,8 +15,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ProcessEnvLabelsCommand extends Command
 {
-    private const DELAY_BETWEEN_DELIVERIES = 1;
-
     private EnvLabelsFileUnzipperService $unzipDownloadedDgtEnvLabelsFileService;
 
     private EnvLabelsFileCutterService $envLabelsCutterService;

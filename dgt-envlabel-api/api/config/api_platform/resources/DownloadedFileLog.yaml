@@ -1,4 +1,4 @@
-App\Entity\Label:
+App\Entity\DownloadedFileLog:
     attributes:
         normalization_context:
             groups: [read]

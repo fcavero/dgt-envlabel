@@ -2,7 +2,9 @@ App\Entity\Vehicle:
     attributes:
         normalization_context:
             groups: [read]
-    collectionOperations: ~
+    collectionOperations:
+        get:
+            method: GET
     itemOperations:
         get:
             method: GET
