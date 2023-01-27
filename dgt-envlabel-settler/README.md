@@ -12,7 +12,6 @@ Este componente va consumiendo los mensajes que le indican qué fichero CSV tien
 │       └── php
 │           └── supervisor
 └── tmp
-    └── splits
 ```
 
 Donde:
@@ -32,22 +31,23 @@ Como es obvio, es posible usar los comandos de *Docker* a calzón quitao, pero p
 usage: make [target]
 
 targets:
-Makefile  help                       Show this help message
-Makefile  build                      (Re)Builds the Settler container
-Makefile  run                        Starts the Settler container
-Makefile  stop                       Stops the Settler container
-Makefile  terminate                  Stops the Settler container (with --remove-orphans option set)
-Makefile  restart                    Restarts the Settler container
-Makefile  code-style                 Runs php-cs to fix code styling following Symfony rules
-Makefile  ssh-php                    SSHs into the Settler container as unprivileged user
-Makefile  ssh-php-root               SSHs into the Settler container as root
-Makefile  app-logs-dev               Tails the Symfony dev log
-Makefile  app-logs-prod              Tails the Symfony prod log
-Makefile  restart-supervisord        (Re)Starts supervisord
-Makefile  update-worker              Prepares supervisord due to manage Symfony worker
-Makefile  run-worker                 Runs Symfony worker via supervisord
-Makefile  worker-status              Shows the supervisord managed Symfony worker status
-Makefile  docker-log-php             Tails the Settler container Docker log
+Makefile  help                         Show this help message
+Makefile  build                        (Re)Builds the Settler container (with --no-cache option)
+Makefile  run                          Starts the Settler container
+Makefile  stop                         Stops the Settler container
+Makefile  terminate                    Stops the Settler container (with --remove-orphans option set)
+Makefile  restart                      Restarts the Settler container
+Makefile  ssh-php                      SSHs into the Settler container as unprivileged user
+Makefile  ssh-php-root                 SSHs into the Settler container as root
+Makefile  app-logs-dev                 Tails the Symfony dev log
+Makefile  app-logs-prod                Tails the Symfony prod log
+Makefile  restart-supervisord          (Re)Starts supervisord
+Makefile  update-worker                Prepares supervisord due to manage Symfony worker
+Makefile  run-worker                   Runs Symfony worker via supervisord
+Makefile  worker-status                Shows the supervisord managed Symfony worker status
+Makefile  supervisord-list-logs        Shows the complete logs list available of supervisord
+Makefile  supervisord-log              Tails the supervisord given log (make logname=x supervisord-log)
+Makefile  docker-log-php               Tails the Settler container Docker log
 ```
 
 Podemos personalizar los argumentos de `docker compose` para adecuarlos a nuestras necesidades; dichos valores se indican en un fichero `.env` que se invoca desde el `Makefile`:
@@ -105,6 +105,10 @@ Cuando se han consumido dicho número de mensajes, el *worker* vuelve a lanzar e
     U_ID=1000 docker exec -it -u root 'envlabel-settler-php' supervisorctl status
     csv-message-consume:csv-message-consume_00   RUNNING   pid 96, uptime 3 days, 6:38:51
     ```
+
+Y podemos acceder a los logs de *supervisord* de manera fácil con dos opciones nuevas dentro del *Makefile*:
+* `make supervisord-list-logs` → Hace un `ls -l` del directorio de logs de *supervisord*, y nos permite conocer el nombre completo del que queremos consultar; esta *Micki herramienta* nos será muy útil para la opción siguiente.
+* `make logname=<nombre-del-fichero-de-log> supervisord-log` → Ejecuta un `tail -f` del fichero indicado.
 
 Hay dos opciones más en el `Makefile` relacionadas con *supervisord*:
 

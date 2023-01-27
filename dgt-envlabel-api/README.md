@@ -15,7 +15,6 @@ Este componente tiene dos partes bien diferenciadas:
 │       └── php
 │           └── supervisor
 └── tmp
-    └── splits
 ```
 
 Donde:
@@ -35,25 +34,27 @@ Como es obvio, es posible usar los comandos de *Docker* a calzón quitao, pero p
 usage: make [target]
 
 targets:
-Makefile  help                      Show this help message
-Makefile  build                     (Re)Builds all the containers
-Makefile  run                       Starts the containers
-Makefile  stop                      Stops the containers
-Makefile  terminate                 Stops the containers (with --remove-orphans option set)
-Makefile  restart                   Restarts the containers
-Makefile  code-style                Runs php-cs to fix code styling following Symfony rules
-Makefile  ssh-php                   SSHs into the PHP container as unprivileged user
-Makefile  ssh-web                   SSHs into the web server container as unprivileged user
-Makefile  ssh-php-root              SSHs into the PHP container as root
-Makefile  ssh-web-root              SSHs into the web server container as root
-Makefile  api-logs-dev              Tails the Symfony dev log
-Makefile  api-logs-prod             Tails the Symfony prod log
-Makefile  restart-supervisord       (Re)Starts Supervisor demon
-Makefile  update-worker             Prepares Supervisor demon due to manage Symfony worker
-Makefile  run-worker                Runs Symfony worker via supervisor demon
-Makefile  workers-status            Shows the Supervisor demon managed Symfony workers status
-Makefile  docker-log-php            Tails the PHP container log
-Makefile  docker-log-web            Tails the WEB container log
+Makefile  help                         Show this help message
+Makefile  build                        (Re)Builds the containers (with --no-cache option)
+Makefile  run                          Starts the containers
+Makefile  stop                         Stops the containers
+Makefile  terminate                    Stops the containers (with --remove-orphans option set)
+Makefile  restart                      Restarts the containers
+Makefile  code-style                   Runs php-cs to fix code styling following Symfony rules
+Makefile  ssh-php                      SSHs into the PHP container as unprivileged user
+Makefile  ssh-web                      SSHs into the web server container as unprivileged user
+Makefile  ssh-php-root                 SSHs into the PHP container as root
+Makefile  ssh-web-root                 SSHs into the web server container as root
+Makefile  api-logs-dev                 Tails the Symfony dev log
+Makefile  api-logs-prod                Tails the Symfony prod log
+Makefile  restart-supervisord          (Re)Starts supervisord
+Makefile  update-worker                Prepares supervisord due to manage Symfony worker
+Makefile  run-worker                   Runs Symfony worker via supervisord
+Makefile  worker-status                Shows the supervisord managed Symfony worker status
+Makefile  supervisord-list-logs        Shows the complete logs list available of supervisord
+Makefile  supervisord-log              Tails the supervisord given log (make logname=x supervisord-log)
+Makefile  docker-log-php               Tails the PHP container log
+Makefile  docker-log-web               Tails the WEB container log
 ```
 
 Podemos personalizar los argumentos de `docker compose` para adecuarlos a nuestras necesidades; dichos valores se indican en un fichero `.env` que se invoca desde el `Makefile`:
@@ -199,16 +200,31 @@ Si la matrícula solo tiene un distintivo, la respuesta es similar a la del *End
 
 ```json
 [
-    {
-        "id": "246d767d-765c-4d50-b652-5fcfb9d8de63",
-        "createdAt": "2023-01-20T08:02:54+01:00",
-        "fileHash": "e8458fa1ac87dd741a488fa3219dcfc7"
-    },
-    {
-        "id": "b976b852-65b0-4f21-bb0b-70f439da4540",
-        "createdAt": "2023-01-20T07:44:52+01:00",
-        "fileHash": "e8458fa1ac87dd741a488fa3219dcfc1"
-    }
+   {
+      "id": "279ca79e-949c-4509-b01f-570f1558cbd2",
+      "createdAt": "2023-01-26T09:53:12+01:00",
+      "fileHash": "323e9912e5f5d9b278ce231c332de873"
+   },
+   {
+      "id": "65cd5702-3e54-49d6-8c12-ee172d89f813",
+      "createdAt": "2023-01-26T20:02:51+01:00",
+      "fileHash": "3f1ba36db14f74175763111e96a42a91"
+   },
+   {
+      "id": "6ef620e7-d825-4ebf-af36-d1f98df49017",
+      "createdAt": "2023-01-27T09:42:44+01:00",
+      "fileHash": "dd73fd719bf9d1ec15b3b54df7169d02"
+   },
+   {
+      "id": "9618b9b2-c664-4915-bee3-5e2577c6bd06",
+      "createdAt": "2023-01-20T09:31:44+01:00",
+      "fileHash": "cab8beb0b4bfb304a24b356a2541e55d"
+   },
+   {
+      "id": "aab3fa5c-f727-44ca-b3fb-f05cbb4eaa91",
+      "createdAt": "2023-01-23T12:38:03+01:00",
+      "fileHash": "ef39e3ef70d4d2c4bf00013b40194d63"
+   }
 ]
 ```
 
@@ -251,11 +267,11 @@ Donde:
 
 El proceso completo de carga de datos puede desencadenarse de forma manual, pero lo ideal es que sea desatendido, y para ello se ha instalado [supervisord](http://supervisord.org/) para controlar el proceso.
 
-Cuenta la leyenda que la DGT sube una nueva versión del fichero de distintivos cada semana, por lo que en la configuración del *worker* de *supervisord* se define dicha periodicidad *(sleep 7d)*:
+Cuenta la leyenda que la DGT subía una nueva versión del fichero de distintivos cada semana, pero la periodicidad parece ser por completo aleatoria; en la configuración del *worker* de *supervisord* hemos definido por defecto un intervalo de dos días *(sleep 2d)*:
 
 ```ini
 [program:download-labels-file-command]
-command=/bin/bash -c 'while true; do /appdata/www/api/bin/download_dgt_envlabel_file_command; sleep 7d; done'
+command=/bin/bash -c 'while true; do /appdata/www/api/bin/download_dgt_envlabel_file_command; sleep 2d; done'
 user=root
 numprocs=1
 startsecs=0
@@ -288,6 +304,10 @@ process_name=%(program_name)s_%(process_num)02d
     download-labels-file-command:download-labels-file-command_00   RUNNING   pid 142 uptime 0:00:53
     ```
 
+Y podemos acceder a los logs de *supervisord* de manera fácil con dos opciones nuevas dentro del *Makefile*:
+* `make supervisord-list-logs` → Hace un `ls -l` del directorio de logs de *supervisord*, y nos permite conocer el nombre completo del que queremos consultar; esta *Micki herramienta* nos será muy útil para la opción siguiente. 
+* `make logname=<nombre-del-fichero-de-log> supervisord-log` → Ejecuta un `tail -f` del fichero indicado.
+
 Hay dos opciones más en el `Makefile` relacionadas con *supervisord*:
 
 * `make update-worker` → Actualiza el *worker* si ha habido algún cambio en su configuraciones (`supervisorctl update`).
@@ -295,7 +315,7 @@ Hay dos opciones más en el `Makefile` relacionadas con *supervisord*:
 
 #### Prevención contra ficheros ya procesados
 
-El proceso de carga es muy costoso en tiempo, por lo que sería un desperdicio completo procesar un fichero que la DGT no ha actualizado en el plazo pertinente. La forma de evitarlo es ir registrando un sencillo *hash* [md5](https://en.wikipedia.org/wiki/MD5) del fichero, una vez cargados los datos.
+El proceso de carga es costoso en tiempo, por lo que sería un desperdicio completo procesar un fichero que la DGT no ha actualizado en el plazo pertinente. La forma de evitarlo es ir registrando un sencillo *hash* [md5](https://en.wikipedia.org/wiki/MD5) del fichero, una vez cargados los datos.
 
 Así, una vez descargado un nuevo fichero comprimido, se calcula un de nuevo el *hash* y se comprueba que es diferente al del último fichero procesado exitosamente, abortándose el proceso si se trata del mismo valor.
 

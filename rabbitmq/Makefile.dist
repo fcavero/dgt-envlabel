@@ -18,7 +18,7 @@ run: ## Start the RabbitMQ container
 		-p $(RABBIT_MGMT_PORT):15672 \
 		-v `pwd`/$(RABBIT_NAME)-mnesia:/var/lib/rabbitmq/mnesia/rabbit@$(RABBIT_NAME) \
 		--mount type=bind,source=`pwd`/enabled_plugins,target=/etc/rabbitmq/enabled_plugins \
-		--restart=on-failure \
+		--restart=always \
 		rabbitmq:3-management
 
 stop: ## Stop the RabbitMQ container

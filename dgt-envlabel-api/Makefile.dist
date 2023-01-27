@@ -11,18 +11,17 @@ help: ## Show this help message
 	@echo 'targets:'
 	@egrep '^(.+)\:\ ##\ (.+)' ${MAKEFILE_LIST} | column -t -c 2 -s ':#'
 
-build: ## (Re)Builds all the containers
-	U_ID=${UID} docker-compose build
+build: ## (Re)Builds the containers (with --no-cache option)
+	docker-compose build --no-cache
 
 run: ## Starts the containers
-#	docker network create envlabel-api-network || true
-	U_ID=${UID} docker-compose up -d
+	docker-compose up -d
 
 stop: ## Stops the containers
-	U_ID=${UID} docker-compose stop
+	docker-compose stop
 
 terminate: ## Stops the containers (with --remove-orphans option set)
-	U_ID=${UID} docker-compose down --remove-orphans -v
+	docker-compose down --remove-orphans -v
 
 restart: ## Restarts the containers
 	$(MAKE) stop && $(MAKE) run
@@ -63,6 +62,16 @@ run-worker: ## Runs Symfony worker via supervisord
 
 worker-status: ## Shows the supervisord managed Symfony worker status
 	U_ID=${UID} docker exec -it -u root $(DOCKER_PHP) supervisorctl status
+
+supervisord-list-logs: ## Shows the complete logs list available of supervisord
+	docker exec -it -u root $(DOCKER_PHP) ls -l /var/log/supervisor/
+
+supervisord-log: ## Tails the supervisord given log (make logname=x supervisord-log)
+ifdef logname
+	docker exec -it -u root $(DOCKER_PHP) tail -f /var/log/supervisor/$(logname)
+else
+	@echo 'Tail needs the complete name of the log file; check it out with "supervisord-list-logs" option.'
+endif
 #<-- End backend commands
 
 #--> Docker specific commands
