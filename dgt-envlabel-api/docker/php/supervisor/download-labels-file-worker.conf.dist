@@ -1,5 +1,5 @@
 [program:download-labels-file-command]
-command=/bin/bash -c 'while true; do /appdata/www/api/bin/download_dgt_envlabel_file_command; sleep 7d; done'
+command=/bin/bash -c 'while true; do /appdata/www/api/bin/download_dgt_envlabel_file_command; sleep 2d; done'
 user=root
 numprocs=1
 startsecs=0

@@ -11,18 +11,17 @@ help: ## Show this help message
 	@echo 'targets:'
 	@egrep '^(.+)\:\ ##\ (.+)' ${MAKEFILE_LIST} | column -t -c 2 -s ':#'
 
-build: ## (Re)Builds the Settler container
-	U_ID=${UID} docker-compose build
+build: ## (Re)Builds the Settler container (with --no-cache option)
+	docker-compose build --no-cache
 
 run: ## Starts the Settler container
-#	docker network create envlabel-api-network || true
-	U_ID=${UID} docker-compose up -d
+	docker-compose up -d
 
 stop: ## Stops the Settler container
-	U_ID=${UID} docker-compose stop
+	docker-compose stop
 
 terminate: ## Stops the Settler container (with --remove-orphans option set)
-	U_ID=${UID} docker-compose down --remove-orphans -v
+	docker-compose down --remove-orphans -v
 
 restart: ## Restarts the Settler container
 	$(MAKE) stop && $(MAKE) run
@@ -36,7 +35,7 @@ ssh-php: ## SSHs into the Settler container as unprivileged user
 	U_ID=${UID} docker exec -it -u ${UID} $(DOCKER_PHP) bash
 
 ssh-php-root: ## SSHs into the Settler container as root
-	U_ID=${UID} docker exec -it -u root $(DOCKER_PHP) bash
+	docker exec -it -u root $(DOCKER_PHP) bash
 
 app-logs-dev: ## Tails the Symfony dev log
 	U_ID=${UID} docker exec -it -u ${UID} $(DOCKER_PHP) tail -f app/var/log/dev.log
@@ -45,18 +44,28 @@ app-logs-prod: ## Tails the Symfony prod log
 	U_ID=${UID} docker exec -it -u ${UID} $(DOCKER_PHP) tail -f app/var/log/prod.log
 
 restart-supervisord: ## (Re)Starts supervisord
-	U_ID=${UID} docker exec -it -u root $(DOCKER_PHP) /etc/init.d/supervisor stop
-	U_ID=${UID} docker exec -it -u root $(DOCKER_PHP) /etc/init.d/supervisor start
-	U_ID=${UID} docker exec -it -u root $(DOCKER_PHP) /etc/init.d/supervisor status
+	docker exec -it -u root $(DOCKER_PHP) /etc/init.d/supervisor stop
+	docker exec -it -u root $(DOCKER_PHP) /etc/init.d/supervisor start
+	docker exec -it -u root $(DOCKER_PHP) /etc/init.d/supervisor status
 
 update-worker: ## Prepares supervisord due to manage Symfony worker
-	U_ID=${UID} docker exec -it -u root $(DOCKER_PHP) supervisorctl update
+	docker exec -it -u root $(DOCKER_PHP) supervisorctl update
 
 run-worker: ## Runs Symfony worker via supervisord
-	U_ID=${UID} docker exec -it -u root $(DOCKER_PHP) supervisorctl start csv-message-consume:*
+	docker exec -it -u root $(DOCKER_PHP) supervisorctl start csv-message-consume:*
 
 worker-status: ## Shows the supervisord managed Symfony worker status
-	U_ID=${UID} docker exec -it -u root $(DOCKER_PHP) supervisorctl status
+	docker exec -it -u root $(DOCKER_PHP) supervisorctl status
+
+supervisord-list-logs: ## Shows the complete logs list available of supervisord
+	docker exec -it -u root $(DOCKER_PHP) ls -l /var/log/supervisor/
+
+supervisord-log: ## Tails the supervisord given log (make logname=x supervisord-log)
+ifdef logname
+	docker exec -it -u root $(DOCKER_PHP) tail -f /var/log/supervisor/$(logname)
+else
+	@echo 'Tail needs the complete name of the log file; check it out with "supervisord-list-logs" option.'
+endif
 #<-- End backend commands
 
 #--> Docker specific commands
