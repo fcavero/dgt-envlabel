@@ -15,9 +15,9 @@ class Label
     /**
      * @ORM\Id()
      * @ORM\Column(type="integer", name="id")
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\GeneratedValue(strategy="NONE")
      */
-    private ?int $id = null;
+    private int $id;
 
     /**
      * @ORM\Column(type="string", name="txt_dgt_tag")
@@ -30,14 +30,15 @@ class Label
     private string $description;
 
 
-    public function __construct(string $tag, string $description)
+    public function __construct(int $id, string $tag, string $description)
     {
+        $this->id = $id;
         $this->tag = $tag;
         $this->description = $description;
     }
 
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }

@@ -36,11 +36,11 @@ class Vehicle
     private Label $label;
 
 
-    public function __construct(string $plate, Label $label)
+    public function __construct(string $plate, Label $label, DateTime $createdAt = null)
     {
         $this->id = Uuid::v4()->toRfc4122();
         $this->plate = $plate;
-        $this->createdAt = new \DateTime();
+        $this->createdAt = ($createdAt == null) ? new \DateTime() : $createdAt;
         $this->label = $label;
     }
 

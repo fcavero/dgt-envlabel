@@ -1,46 +1,46 @@
 App\Entity\Label:
-    Label-0:
+    label_1:
         __construct:
             id: 1
-            tag: 16T0
-            description: CERO EMISIONES
-    Label-1:
+            tag: '16T0'
+            description: 'CERO EMISIONES'
+    label_2:
         __construct:
             id: 2
-            tag: 16TE
-            description: ECO
-    Label-2:
+            tag: '16TE'
+            description: 'ECO'
+    label_3:
         __construct:
             id: 3
-            tag: 16TC
-            description: C
-    Label-3:
+            tag: '16TC'
+            description: 'C'
+    label_4:
         __construct:
             id: 4
-            tag: 16TB
-            description: B
-    Label-4:
+            tag: '16TB'
+            description: 'B'
+    label_5:
         __construct:
             id: 5
-            tag: 16M0
-            description: CERO EMISIONES
-    Label-5:
+            tag: '16M0'
+            description: 'CERO EMISIONES'
+    label_6:
         __construct:
             id: 6
-            tag: 16ME
-            description: ECO
-    Label-6:
+            tag: '16ME'
+            description: 'ECO'
+    label_7:
         __construct:
             id: 7
-            tag: 16MC
-            description: C
-    Label-7:
+            tag: '16MC'
+            description: 'C'
+    label_8:
         __construct:
             id: 8
-            tag: 16MB
-            description: B
-    Label-8:
+            tag: '16MB'
+            description: 'B'
+    label_9:
         __construct:
             id: 9
-            tag: SIN DISTINTIVO
-            description: SIN DISTINTIVO
+            tag: 'SIN DISTINTIVO'
+            description: 'SIN DISTINTIVO'
