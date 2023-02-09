@@ -1,37 +1,56 @@
 App\Entity\Vehicle:
-    Vehicle-0:
+    vehicle_1:
         __construct:
             plate: 0000BBB
-            label: 9
-    Vehicle-1:
+            label: '@label_9'
+            createdAt: <datetimeBetween('-50 days', 'now')>
+    vehicle_2:
         __construct:
             plate: 0001DDD
-            label: 4
-    Vehicle-2:
+            label: '@label_4'
+            createdAt: <datetimeBetween('-50 days', '-30 days')>
+    vehicle_3:
         __construct:
             plate: 0002FFF
-            label: 8
-    Vehicle-3:
+            label: '@label_3'
+            createdAt: <datetimeBetween('-50 days', 'now')>
+    vehicle_4:
         __construct:
             plate: 0003GGG
-            label: 3
-    Vehicle-4:
+            label: '@label_2'
+            createdAt: <datetimeBetween('-50 days', 'now')>
+    vehicle_5:
         __construct:
             plate: 0004HHH
-            label: 7
-    Vehicle-5:
+            label: '@label_6'
+            createdAt: <datetimeBetween('-50 days', 'now')>
+    vehicle_6:
         __construct:
             plate: 0005JJJ
-            label: 2
-    Vehicle-6:
+            label: '@label_2'
+            createdAt: <datetimeBetween('-50 days', 'now')>
+    vehicle_7:
         __construct:
             plate: 0006KKK
-            label: 6
-    Vehicle-7:
+            label: '@label_5'
+            createdAt: <datetimeBetween('-50 days', 'now')>
+    vehicle_8:
         __construct:
             plate: 0007LLL
-            label: 1
-    Vehicle-8:
+            label: '@label_1'
+            createdAt: <datetimeBetween('-50 days', 'now')>
+    vehicle_9:
         __construct:
             plate: 0008MMM
-            label: 5
+            label: '@label_9'
+            createdAt: <datetimeBetween('-50 days', 'now')>
+    vehicle_10:
+        __construct:
+            plate: 0001DDD
+            label: '@label_2'
+            createdAt: <datetimeBetween('-29 days', 'now')>
+    vehicle_11:
+        __construct:
+            plate: 0002DDD
+            label: '@label_4'
+            createdAt: <datetimeBetween('-50 days', 'now')>

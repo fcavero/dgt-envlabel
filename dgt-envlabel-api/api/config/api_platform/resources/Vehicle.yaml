@@ -11,12 +11,12 @@ App\Entity\Vehicle:
         latest:
             method: GET
             path: /vehicles/latest/{plate}
-            controller: App\Api\Action\GetVehicleLatestEnvLabelByPlate
+            controller: App\Api\Action\Vehicle\GetVehicleLatestEnvLabelByPlate
             read: false
         all:
             method: GET
             path: /vehicles/all/{plate}
-            controller: App\Api\Action\GetVehicleAllEnvLabelsByPlate
+            controller: App\Api\Action\Vehicle\GetVehicleAllEnvLabelsByPlate
             read: false
     properties:
         label:

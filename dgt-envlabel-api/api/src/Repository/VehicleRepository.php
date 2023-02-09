@@ -35,11 +35,11 @@ class VehicleRepository extends ServiceEntityRepository
 
     public function findLatestEnvLabelByPlateOrFail(string $plate): Vehicle
     {
-        if (null === $vehicle = $this->findBy(['plate' => $plate,], ['createdAt' => 'DESC',], 1)) {
+        if (null === $vehicle = $this->findOneBy(['plate' => $plate,], ['createdAt' => 'DESC',])) {
             throw VehicleNotFoundException::fromVehiclePlate($plate);
         }
 
-        return $vehicle[0];
+        return $vehicle;
     }
 
     public function findAllEnvLabelsByPlateOrFail(string $plate): array

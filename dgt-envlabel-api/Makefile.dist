@@ -12,16 +12,16 @@ help: ## Show this help message
 	@egrep '^(.+)\:\ ##\ (.+)' ${MAKEFILE_LIST} | column -t -c 2 -s ':#'
 
 build: ## (Re)Builds the containers (with --no-cache option)
-	docker-compose build --no-cache
+	U_ID=${UID} docker-compose build --no-cache
 
 run: ## Starts the containers
-	docker-compose up -d
+	U_ID=${UID} docker-compose up -d
 
 stop: ## Stops the containers
-	docker-compose stop
+	U_ID=${UID} docker-compose stop
 
 terminate: ## Stops the containers (with --remove-orphans option set)
-	docker-compose down --remove-orphans -v
+	U_ID=${UID} docker-compose down --remove-orphans -v
 
 restart: ## Restarts the containers
 	$(MAKE) stop && $(MAKE) run

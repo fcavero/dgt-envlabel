@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Api\Action;
+namespace App\Api\Action\Vehicle;
 
 use App\Entity\Vehicle;
 use App\Service\Vehicle\GetVehicleEnvLabelByPlateService;
