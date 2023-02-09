@@ -8,6 +8,9 @@ App\Entity\Label:
     itemOperations:
         get:
             method: GET
+            path: /labels/{id}
+            controller: App\Api\Action\Label\GetLabelById
+            read: false
         common_name:
             method: GET
             path: /labels/common_name/{description}

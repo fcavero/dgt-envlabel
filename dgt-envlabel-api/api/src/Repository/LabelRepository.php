@@ -24,7 +24,7 @@ class LabelRepository extends ServiceEntityRepository
         parent::__construct($registry, Label::class);
     }
 
-    public function findByIdOrFail(string $id): Label
+    public function findLabelByIdOrFail(int $id): Label
     {
         if (null === $label = $this->find($id)) {
             throw LabelNotFoundException::fromLabelId($id);

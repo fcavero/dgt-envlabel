@@ -9,6 +9,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 class LabelTest extends TestBase
 {
+    private const SIN_DISTINTIVO = 'SIN DISTINTIVO';
+    private const CERO_EMISIONES = 'CERO EMISIONES';
+
 
     public function testGetCollection(): void
     {
@@ -23,7 +26,7 @@ class LabelTest extends TestBase
      */
     public function testGetSinDistintivoLabel_ok(): void
     {
-        $id = $this->getLabelIdByTag('SIN DISTINTIVO');
+        $id = $this->getLabelIdByTag(self::SIN_DISTINTIVO);
 
         self::$labelClient->request('GET', $this->getLabelByIdRequestURI($id));
 
@@ -32,7 +35,7 @@ class LabelTest extends TestBase
 
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
         $this->assertEquals($id, $responseData['id']);
-        $this->assertEquals('SIN DISTINTIVO', $responseData['description']);
+        $this->assertEquals(self::SIN_DISTINTIVO, $responseData['description']);
     }
 
     /**
@@ -49,7 +52,7 @@ class LabelTest extends TestBase
 
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
         $this->assertEquals($id, $responseData['id']);
-        $this->assertEquals('CERO EMISIONES', $responseData['description']);
+        $this->assertEquals(self::CERO_EMISIONES, $responseData['description']);
     }
 
     /**
@@ -115,13 +118,28 @@ class LabelTest extends TestBase
         $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
     }
 
-
     /**
      * @throws Exception
      */
     public function testGetSinDistintivoLabelByDescription_ok(): void
     {
-        $description = 'SIN DISTINTIVO';
+        $description = self::SIN_DISTINTIVO;
+
+        self::$labelClient->request('GET', $this->getLabelByDescriptionRequestURI($description));
+
+        $response = self::$labelClient->getResponse();
+        $responseData = $this->getResponseData($response);
+
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertEquals($description, $responseData['description']);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testGetCeroLabelByDescription_ok(): void
+    {
+        $description = self::CERO_EMISIONES;
 
         self::$labelClient->request('GET', $this->getLabelByDescriptionRequestURI($description));
 

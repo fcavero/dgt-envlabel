@@ -8,7 +8,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class LabelNotFoundException extends NotFoundHttpException
 {
-    public static function fromLabelId(string $id): self
+    public static function fromLabelId(int $id): self
     {
         throw new self(\sprintf('Environmental label with ID "%s" not found.', $id));
     }
