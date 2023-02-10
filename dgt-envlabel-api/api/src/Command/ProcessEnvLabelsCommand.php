@@ -8,6 +8,7 @@ use App\Service\EnvLabelsFileCutterService;
 use App\Service\EnvLabelsFileUnzipperService;
 use App\Service\FilesystemService;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Exception\ExceptionInterface;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -86,6 +87,9 @@ class ProcessEnvLabelsCommand extends Command
         return true;
     }
 
+    /**
+     * @throws ExceptionInterface
+     */
     private function runSendEnvLabelCsvMessagesCommand(OutputInterface $output): int
     {
         if (null !== ($command = $this->getApplication()->find('app:send-environmental-labels-csv-messages'))) {

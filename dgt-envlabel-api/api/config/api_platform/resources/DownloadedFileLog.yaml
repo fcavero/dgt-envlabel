@@ -8,3 +8,8 @@ App\Entity\DownloadedFileLog:
     itemOperations:
         get:
             method: GET
+        hash:
+            method: GET
+            path: /downloaded_file_logs/hash/{hash}
+            controller: App\Api\Action\DownloadedFileLog\GetDownloadedFileByHash
+            read: false
