@@ -296,7 +296,7 @@ process_name=%(program_name)s_%(process_num)02d
     supervisord is running
     ```
 
-2. Comprobamos si el *worker* también esta corriendo:
+2. Comprobamos si el *worker* también está corriendo:
 
     ```shell
     ❯ make workers-status 
@@ -310,7 +310,7 @@ Y podemos acceder a los logs de *supervisord* de manera fácil con dos opciones 
 
 Hay dos opciones más en el `Makefile` relacionadas con *supervisord*:
 
-* `make update-worker` → Actualiza el *worker* si ha habido algún cambio en su configuraciones (`supervisorctl update`).
+* `make update-worker` → Actualiza el *worker* si ha habido algún cambio en sus configuraciones (`supervisorctl update`).
 * `make run-worker` → Arranca el *worker* (`supervisorctl start`).
 
 #### Prevención contra ficheros ya procesados
@@ -319,16 +319,6 @@ El proceso de carga es costoso en tiempo, por lo que sería un desperdicio compl
 
 Así, una vez descargado un nuevo fichero comprimido, se calcula un de nuevo el *hash* y se comprueba que es diferente al del último fichero procesado exitosamente, abortándose el proceso si se trata del mismo valor.
 
-## Testing
-
-→ TODO
-
 ## Licencia
 
 DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE (WTFPL). Por favor, revisad el [fichero de licencia](./LICENSE) para más información.
-
-## TODO
-
-* Añadir otro *EndPoint* para poder recuperar el último fichero procesado con éxito.
-* Añadir filtros de fecha.
-* Añadir los logs de *supervisord* como opción del `Makefile`.

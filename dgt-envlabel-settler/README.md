@@ -115,14 +115,6 @@ Hay dos opciones más en el `Makefile` relacionadas con *supervisord*:
 * `make update-worker` → Actualiza el *worker* si ha habido algún cambio en su configuraciones (`supervisorctl update`).
 * `make run-worker` → Arranca el *worker* (`supervisorctl start`).
 
-## Testing
-
-→ TODO
-
 ## Licencia
 
 DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE (WTFPL). Por favor, revisad el [fichero de licencia](./LICENSE) para más información.
-
-## TODO
-
-* Añadir los logs de *supervisord* como opción del `Makefile`.
