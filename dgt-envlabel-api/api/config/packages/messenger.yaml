@@ -19,3 +19,9 @@ framework:
                     auto_setup: true
         routing:
             'App\Messenger\Message\EnvLabelCsvMessage': amqp_csv
+
+when@test:
+    framework:
+        messenger:
+            transports:
+                amqp_csv: 'in-memory://'
